@@ -1,4 +1,4 @@
-# Employee Tracker
+# [Employee Tracker](https://github.com/ReyG18/Employee-Tracker)
 
 ## Description
 
@@ -58,7 +58,7 @@ The following features are currently in development. Stay tuned!
 
 ## Walkthrough Video
 
-<!-- [Walkthrough Video Link]() - A walkthrough video demonstrating the functionality of the Employee Tracker. -->
+[Walkthrough Video Link](https://drive.google.com/file/d/1UzYSMgJeuRIUF3oCBLUAp4qmglESKBeW/view) - A walkthrough video demonstrating the functionality of the Employee Tracker.
 
 ## Contact Me
 
