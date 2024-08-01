@@ -2,6 +2,7 @@ const express = require("express");
 const { Pool } = require("pg");
 const inquirer = require("inquirer");
 const { queryPool } = require("./lib/queries");
+const handlerFunctions = require("./lib/handlers");
 require("dotenv").config();
 
 const PORT = process.env.PORT || 3001;
@@ -24,44 +25,7 @@ const pool = new Pool(
 
 pool.connect();
 
-const { viewDepts, viewRoles, viewEmployees, addDept, addRole, addEmployee } =
-  queryPool(pool);
-
-async function handleViewDepts() {
-  console.table(await viewDepts());
-  mainMenu();
-}
-
-async function handleViewRoles() {
-  console.table(await viewRoles());
-  mainMenu();
-}
-
-async function handleViewEmployees() {
-  console.table(await viewEmployees());
-  mainMenu();
-}
-
-async function handleAddDept() {
-  await addDept();
-  mainMenu();
-}
-
-async function handleAddRole() {
-  await addRole();
-  mainMenu();
-}
-
-async function handleAddEmployee() {
-  await addEmployee();
-  mainMenu();
-}
-
-async function handleExit() {
-  console.log("Goodbye");
-  await pool.end();
-  process.exit();
-}
+const queries = queryPool(pool);
 
 async function mainMenu() {
   // User will answer these questions in order to view or modify employee information
@@ -83,25 +47,25 @@ async function mainMenu() {
 
     switch (answer.categories) {
       case "View all departments":
-        handleViewDepts();
+        handlers.handleViewDepts();
         break;
       case "View all roles":
-        handleViewRoles();
+        handlers.handleViewRoles();
         break;
       case "View all employees":
-        handleViewEmployees();
+        handlers.handleViewEmployees();
         break;
       case "Add a department":
-        handleAddDept();
+        handlers.handleAddDept();
         break;
       case "Add a role":
-        handleAddRole();
+        handlers.handleAddRole();
         break;
       case "Add an employee":
-        handleAddEmployee();
+        handlers.handleAddEmployee();
         break;
       case "Exit":
-        handleExit();
+        handlers.handleExit();
         break;
       default:
         mainMenu();
@@ -111,6 +75,9 @@ async function mainMenu() {
     console.error(err);
   }
 }
+
+// Initialize handler functions with mainMenu callback
+const handlers = handlerFunctions(pool, queries, mainMenu);
 
 // Start the application
 mainMenu();
