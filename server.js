@@ -27,53 +27,94 @@ pool.connect();
 const { viewDepts, viewRoles, viewEmployees, addDept, addRole, addEmployee } =
   queryPool(pool);
 
-async function employeeTracker() {
-  // User will answer these questions in order to view or modify employee information
-  const answer = await inquirer.prompt({
-    type: "list",
-    name: "categories",
-    message: "Which would you like to do?",
-    choices: [
-      "View all departments",
-      "View all roles",
-      "View all employees",
-      "Add a department",
-      "Add a role",
-      "Add an employee",
-      "Update employee role",
-      "Exit",
-    ],
-  });
-  switch (answer.categories) {
-    case "View all departments":
-      console.table(await viewDepts());
-      break;
-    case "View all roles":
-      viewRoles();
-      break;
-    case "View all employees":
-      viewEmployees();
-      break;
-    case "Add a role":
-      addRole();
-      break;
-    case "Add an employee":
-      addEmployee();
-      break;
-    // case "Update employee role": UNCOMMENT WHEN READY TO USE
-    //   updateEmployeeRole();
-    //   break;
-    case "Exit":
-      console.log("Goodbye"), process.exit();
-  }
+async function handleViewDepts() {
+  console.table(await viewDepts());
+  mainMenu();
+}
 
-  // Restart the menu
-  employeeTracker();
+async function handleViewRoles() {
+  console.table(await viewRoles());
+  mainMenu();
+}
+
+async function handleViewEmployees() {
+  console.table(await viewEmployees());
+  mainMenu();
+}
+
+async function handleAddDept() {
+  await addDept();
+  mainMenu();
+}
+
+async function handleAddRole() {
+  await addRole();
+  mainMenu();
+}
+
+async function handleAddEmployee() {
+  await addEmployee();
+  mainMenu();
+}
+
+async function handleExit() {
+  console.log("Goodbye");
+  await pool.end();
+  process.exit();
+}
+
+async function mainMenu() {
+  // User will answer these questions in order to view or modify employee information
+  try {
+    const answer = await inquirer.prompt({
+      type: "list",
+      name: "categories",
+      message: "Which would you like to do?",
+      choices: [
+        "View all departments",
+        "View all roles",
+        "View all employees",
+        "Add a department",
+        "Add a role",
+        "Add an employee",
+        "Exit",
+      ],
+    });
+
+    switch (answer.categories) {
+      case "View all departments":
+        handleViewDepts();
+        break;
+      case "View all roles":
+        handleViewRoles();
+        break;
+      case "View all employees":
+        handleViewEmployees();
+        break;
+      case "Add a department":
+        handleAddDept();
+        break;
+      case "Add a role":
+        handleAddRole();
+        break;
+      case "Add an employee":
+        handleAddEmployee();
+        break;
+      case "Exit":
+        handleExit();
+        break;
+      default:
+        mainMenu();
+        break;
+    }
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 // Start the application
-employeeTracker();
+mainMenu();
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port http://localhost:${PORT}`);
 });

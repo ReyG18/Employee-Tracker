@@ -2,12 +2,12 @@
 DROP DATABASE IF EXISTS employee_db;
 CREATE DATABASE employee_db;
 
+-- Uses the employee_db database --
+\c employee_db;
+
 DROP TABLE IF EXISTS department CASCADE;
 DROP TABLE IF EXISTS role CASCADE;
 DROP TABLE IF EXISTS employee CASCADE;
-
--- Uses the employee_db database --
-\c employee_db;
 
 -- Add department table --
 CREATE TABLE department (
